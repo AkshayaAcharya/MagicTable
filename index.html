@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset = "UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<!-- 3.4.1 version bootstrap -->
+		<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+		<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+		<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+		
+		<!-- 4.0.0 version bootstrap -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<title>Table Color</title>
+	</head>
+	<body>
+		<div  class="container-fluid">
+			<div class="row">
+				<div class="col-sm-8 overflow-auto">
+					<h3>To Create Random Table</h3>
+					<label for="rowVal">Enter Row Value: </label><input class="form-control" id="rowVal" type="number" min = 1 max= 100 value = 1 onchange="setMN(this)"/></label>
+					<label for="colVal">Enter Col Value: </label><input class="form-control" id="colVal" type="number" min = 1 max= 10  value = 1 onchange="setMN(this)"/></label><br>
+					<div id="tab" class="overflow-auto"></div>
+					<label for="selectRow">Select row : </label>
+						<select id="selectRow">
+						</select>
+					</label>
+					<label for="selectCell">Select Cell : </label>
+						<select id="selectCell">
+						</select>
+					</label>
+					<button class="btn btn-primary" id="highlighCell" onclick="highlightCell()">Highlight Cell</button>
+				</div>
+				<div class="col-sm-4 input-group-sm mb-3">
+					<h3>To Create Multiplication Table</h3>
+					<label for="colVal">Select Table value: </label><input class="form-control" id="colVal" type="number" min = 1 max= 100  value = 1 onchange="setMathTable(this)"/></label>
+					<div id="mulTab"></div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script>
+		var m = 1, n = 1;
+		function setMN(ele) {
+			var idd = ele.id;
+			switch(idd) {
+				case "rowVal": m = document.getElementById(ele.id).value;
+							   break;
+				case "colVal": n = document.getElementById(ele.id).value;
+							   break;
+			}
+			createTable();
+			setSelectOptions(m,n);
+		}
+		function createTable() {
+			document.getElementById("tab").innerHTML = "";
+			var table = document.createElement("table");
+			table.setAttribute("id","ttt");
+			table.setAttribute("class", "table")
+			for(var i = 0; i < m; i++) {
+				var tr = document.createElement('tr');
+				for(var j = 0; j < n; j++) {
+						tr.appendChild(document.createElement('td'));
+						tr.cells[j].appendChild( document.createTextNode('r['+i+'] c['+j+']') );
+						tr.cells[j].style.cursor = "pointer";
+						tr.cells[j].onclick = function() {
+						if((j%2) == 0) {
+							disp(this,"red");
+						} else {
+							disp(this,"green");
+						}
+						
+					}
+				}
+					table.appendChild(tr);
+			}
+			document.getElementById("tab").appendChild(table);
+		}
+		function setSelectOptions(m,n) {
+			document.getElementById('selectRow').innerHTML = "";
+			document.getElementById('selectCell').innerHTML = "";
+			for(var i = 0; i< m; i++) {
+				var opt = document.createElement("option");
+				opt.innerHTML = i;
+				document.getElementById('selectRow').appendChild(opt);
+			}
+			for(var j = 0; j< n; j++) {
+				var opt = document.createElement("option");
+				opt.innerHTML = j;
+				document.getElementById('selectCell').appendChild(opt);
+			}
+		}
+		function highlightCell(){
+			var a = document.getElementById('selectRow').value;
+			var b = document.getElementById('selectCell').value;
+			document.getElementById('ttt').rows[a].cells[b].style.backgroundColor = "red";
+			
+		}
+		function disp(ele,color) {
+			removeColorFromTable();
+			ele.style.backgroundColor = color;
+			console.log(ele.cellIndex + ' : ' + ele.parentNode.rowIndex); //ele.cellIndex: to get coloumn value ele.parentNode.rowIndex: to get rowIndex
+			
+		}
+		function removeColorFromTable() {
+			for(var i=0; i<document.getElementById('ttt').rows.length; i++) {
+				for(var j=0; j<document.getElementById('ttt').rows[i].cells.length; j++) {
+						document.getElementById('ttt').rows[i].cells[j].style.backgroundColor = "white";
+				}
+			}
+		}
+		//To create Math Table
+		function setMathTable(ele) {
+		    var mulValue = ele.value;
+			document.getElementById("mulTab").innerHTML = "";
+			var table = document.createElement("table");
+			table.setAttribute("id","mtt");
+			for(var i = 1; i <= 20; i++) {
+				var tr = document.createElement('tr');
+				for(var j = 0; j < 1; j++) {
+						tr.appendChild(document.createElement('td'));
+						tr.cells[j].appendChild( document.createTextNode(mulValue+"*"+i+"="+(mulValue*i)));
+					}
+					table.appendChild(tr);
+				}
+			document.getElementById("mulTab").appendChild(table);
+		}
+	</script>
+	<style>
+		table tr,td {
+			border: 1px solid black;
+			padding: 10px;
+		}
+		
+	</style>
+</html>
